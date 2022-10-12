@@ -4,41 +4,58 @@ from sqlalchemy.orm import sessionmaker
 from config import DSN
 from models import create_tables, Publisher, Shop, Book, Stock, Sale
 
-# Наоплнитель базы
+
+# Наоплнитель базы из JSON
 def fill_base():
     with open("base.json", "r") as base:
         data = json.load(base)
+        i = 0
         for body in data:
             if body['model'] == "publisher":
                 publisher = Publisher(name=body["fields"]["name"])
                 session.add(publisher)
                 session.commit()
-                print(publisher.id)
+                i += 1
         for body in data:
             if body['model'] == "shop":
                 shop = Shop(name=body["fields"]["name"])
                 session.add(shop)
                 session.commit()
-                print(shop.id)
+                i += 1
         for body in data:
             if body['model'] == "book":
                 book = Book(title=body["fields"]["title"], publisher_id=body["fields"]["id_publisher"])
                 session.add(book)
                 session.commit()
-                print(book.id)
+                i += 1
         for body in data:
             if body['model'] == "stock":
-                stock = Stock(book_id=body["fields"]["id_book"], shop_id=body["fields"]["id_shop"], count=body["fields"]["count"])
+                stock = Stock(book_id=body["fields"]["id_book"], shop_id=body["fields"]["id_shop"],
+                              count=body["fields"]["count"])
                 session.add(stock)
                 session.commit()
-                print(stock.id)
+                i += 1
         for body in data:
             if body['model'] == "sale":
                 sale = Sale(price=body["fields"]["price"], date_sale=body["fields"]["date_sale"],
                             stock_id=body["fields"]["id_stock"], count=body["fields"]["count"])
                 session.add(sale)
                 session.commit()
-                print(sale.id)
+                i += 1
+        print(f'Создано записей: {i}')
+
+
+# Поисковик по имени или ID с проверкой на тип данных в запросе, можно INT и STR
+def search():
+    name_id = input("Введите имя или ID издателя: ")
+    if name_id.isdigit():
+        request = session.query(Publisher).filter(Publisher.id == name_id).all()
+        for c in request:
+            print(c)
+    else:
+        request = session.query(Publisher).filter(Publisher.name == name_id).all()
+        for c in request:
+            print(c)
 
 
 # Создаём движок, не совсем разобрался, но звучит круто.
@@ -55,7 +72,7 @@ session = Session()
 fill_base()
 
 # Выполняем запрос
-
+search()
 
 
 #

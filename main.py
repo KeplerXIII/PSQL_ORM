@@ -74,43 +74,5 @@ fill_base()
 # Выполняем запрос
 search()
 
-
-#
-# course1 = Course(name='Python')
-# print(course1.id)
-#
-# session.add(course1)
-# session.commit()
-#
-# print(course1.id)
-#
-# print(course1)
-#
-# hw1 = Homework(number=1, description='простая домашняя работа', course=course1)
-# hw2 = Homework(number=2, description='сложная домашняя работа', course=course1)
-# session.add_all([hw1, hw2])
-#
-# for c in session.query(Homework).filter(Homework.description.like('%сложн%')).all():
-#     print(c)
-#
-# for c in session.query(Course).join(Homework.course).filter(Homework.number == 3).all():
-#     print(c)
-#
-# c2 = Course(name='Java')
-# session.add(c2)
-# session.commit()
-#
-# subq = session.query(Homework).filter(Homework.description.like('%сложн%')).subquery()
-# for c in session.query(Course).join(subq, Course.id == subq.c.course_id).all():
-#      print(c)
-#
-# session.query(Course).filter(Course.name == 'Java').update({'name': 'JavaScript'})
-# session.commit()
-#
-# session.query(Course).filter(Course.name == 'JavaScript').delete()
-# session.commit()
-#
-# for c in session.query(Course).all():
-#     print(c)
-
+# Закрываем сессию
 session.close()

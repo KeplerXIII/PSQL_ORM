@@ -50,12 +50,22 @@ def search():
     name_id = input("Введите имя или ID издателя: ")
     if name_id.isdigit():
         request = session.query(Publisher).filter(Publisher.id == name_id).all()
-        for c in request:
-            print(c)
+        for author in request:
+            print(f'Книги автора {author.name} вы можете приобрести в следующих магазинах:')
+        request = session.query(Publisher, Shop).join(Book, Book.publisher_id == Publisher.id)\
+            .join(Stock, Stock.book_id == Book.id).join(Shop, Shop.id == Stock.shop_id).filter(Publisher.id == name_id).all()
+        for publisher, shop in request:
+            print(shop.name)
+
     else:
         request = session.query(Publisher).filter(Publisher.name == name_id).all()
-        for c in request:
-            print(c)
+        for author in request:
+            print(f'Книги автора {author.name} вы можете приобрести в следующих магазинах:')
+
+        request = session.query(Publisher, Shop).join(Book, Book.publisher_id == Publisher.id)\
+            .join(Stock, Stock.book_id == Book.id).join(Shop, Shop.id == Stock.shop_id).filter(Publisher.name == name_id).all()
+        for publisher, shop in request:
+            print(shop.name)
 
 
 # Создаём движок, не совсем разобрался, но звучит круто.
@@ -73,6 +83,8 @@ fill_base()
 
 # Выполняем запрос
 search()
+
+
 
 # Закрываем сессию
 session.close()

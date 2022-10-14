@@ -63,7 +63,7 @@ def search():
         for author in request:
             print(f'Книги автора {author.name} вы можете приобрести в следующих магазинах:')
 
-        request = session.query(Publisher, Shop).join(Book, Book.publisher_id == Publisher.id)\
+        request = session.query(Book, Publisher, Shop).join(Book, Book.publisher_id == Publisher.id)\
             .join(Stock, Stock.book_id == Book.id).join(Shop, Shop.id == Stock.shop_id).filter(Publisher.name == name_id).all()
         for book, publisher, shop in request:
             print(f' В магазине {shop.name} вы можете приобрести книгу {book.title}')
